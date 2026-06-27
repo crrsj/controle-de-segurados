@@ -52,5 +52,10 @@ public class SeguradoServico {
         return modelMapper.map(segurado, SeguradoSemCpf.class);
 }
 
+    public SeguradoSemCpf buscarSeguradoPorId(Long id){
+        var segurado = retornaseguradoOuLancaExcessao(id);
+        return modelMapper.map(segurado, SeguradoSemCpf.class);
+
+   }
 }
 
