@@ -57,5 +57,11 @@ public class SeguradoServico {
         return modelMapper.map(segurado, SeguradoSemCpf.class);
 
    }
+
+   @Transactional
+   public void excluirSegurado(Long id){
+        var segurado = retornaseguradoOuLancaExcessao(id);
+        seguradoRepositorio.delete(segurado);
+   }
 }
 
