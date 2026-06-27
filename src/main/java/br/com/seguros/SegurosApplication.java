@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		info = @Info(
 				title = "API - Controle De Segurados",
 				version = "1.0",
-				description = " Sistema de gestão para serviços de turismo",
+				description = " Sistema de gestão para controle de segurados",
 				contact = @Contact()
 		)
 )
