@@ -2,7 +2,6 @@ package br.com.seguros.entidades;
 
 
 import br.com.seguros.enums.Cia;
-import br.com.seguros.enums.Mes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
