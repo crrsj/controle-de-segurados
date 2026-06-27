@@ -1,0 +1,28 @@
+name: Java CI com GitHub Actions
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o código do repositório
+      - name: Baixar código fonte
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Java (JDK)
+      - name: Configurar o JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+
+      - name: Compilar e Rodar Testes com Maven
+        run: mvn clean verify
