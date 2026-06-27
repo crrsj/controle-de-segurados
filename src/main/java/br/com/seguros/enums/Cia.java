@@ -1,5 +1,17 @@
 package br.com.seguros.enums;
 
 public enum Cia {
-    MAPFRE,PORTO,AZUL,ALLIANZ,ZURICH,HDI,ALFA,TOKIO,LIBERTY,SUHAY
+    MAPFRE,
+    PORTO,
+    AZUL,
+    ZURICH,
+    ALLIANZ,
+    HDI,
+    ALFA,
+    SUHAY,
+    LIBERTY,
+    TOKIO;
+
+
+
 }
