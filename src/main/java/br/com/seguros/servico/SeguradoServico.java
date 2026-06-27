@@ -45,5 +45,12 @@ public class SeguradoServico {
     }
 
 
+    @Transactional
+    public SeguradoSemCpf atualizarSegurado(Long id, SeguradoSemCpf seguradoSemCpf){
+        var segurado = retornaseguradoOuLancaExcessao(id);
+        modelMapper.map(seguradoSemCpf,segurado);
+        return modelMapper.map(segurado, SeguradoSemCpf.class);
+}
+
 }
 
