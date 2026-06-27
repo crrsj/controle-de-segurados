@@ -44,6 +44,13 @@ public class SeguradoServico {
         return modelMapper.map(segurado,SeguradoSemCpf.class);
     }
 
+    public List<SeguradoSemCpf> buscarPorNome(String nome) {
+        List<Segurado> segurados = seguradoRepositorio.findByNomeContainingIgnoreCase(nome);
+        return segurados.stream()
+                .map(segurado -> modelMapper.map(segurado, SeguradoSemCpf.class))
+                .toList();
+    }
+
 
     @Transactional
     public SeguradoSemCpf atualizarSegurado(Long id, SeguradoSemCpf seguradoSemCpf){
