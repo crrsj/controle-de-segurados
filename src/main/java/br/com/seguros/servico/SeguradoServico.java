@@ -3,8 +3,8 @@ package br.com.seguros.servico;
 import br.com.seguros.dtos.SeguradoDto;
 import br.com.seguros.dtos.SeguradoSemCpf;
 import br.com.seguros.entidades.Segurado;
-import br.com.seguros.repositorio.ApoliceRepositorio;
 import br.com.seguros.repositorio.SeguradoRepositorio;
+import br.com.seguros.excessoes.ExcessaoSeguradoNaoEncontrado;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,10 +32,18 @@ public class SeguradoServico {
                 modelMapper.map(segurado,SeguradoSemCpf.class)).toList();
     }
 
+    public Segurado retornaseguradoOuLancaExcessao(Long id){
+        return seguradoRepositorio.findById(id).orElseThrow(()->
+                new ExcessaoSeguradoNaoEncontrado("Segurado não encontrado !"));
+    }
+
+
     public SeguradoSemCpf buscarPorCpf(String cpf){
         var segurado = seguradoRepositorio.findByCpf(cpf).orElseThrow(() ->
-                new RuntimeException("Segurado com o CPF " + cpf + " não foi encontrado."));
+                new ExcessaoSeguradoNaoEncontrado("Segurado com o CPF " + cpf + " não foi encontrado."));
         return modelMapper.map(segurado,SeguradoSemCpf.class);
     }
+
+
 }
 
