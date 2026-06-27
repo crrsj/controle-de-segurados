@@ -31,5 +31,11 @@ public class SeguradoServico {
         return seguradoRepositorio.findAll(pageable).map(segurado ->
                 modelMapper.map(segurado,SeguradoSemCpf.class)).toList();
     }
+
+    public SeguradoSemCpf buscarPorCpf(String cpf){
+        var segurado = seguradoRepositorio.findByCpf(cpf).orElseThrow(() ->
+                new RuntimeException("Segurado com o CPF " + cpf + " não foi encontrado."));
+        return modelMapper.map(segurado,SeguradoSemCpf.class);
+    }
 }
 
