@@ -22,10 +22,11 @@ public class ApoliceDto {
     private LocalDate vigenciaInicial;
     private LocalDate vigenciaFinal;
     private Cia cia;
-    private int comissao;
+    private Double porcentagemComissao;
     private int parcelas;
-    private BigDecimal premio;
-    private BigDecimal valorComissao;
+    private BigDecimal premioLiquido;
+    private BigDecimal premioBruto;
+    private BigDecimal totalComissao;
     private boolean ativa = true;
     private Segurado segurado;
 

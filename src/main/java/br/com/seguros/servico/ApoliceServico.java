@@ -1,6 +1,7 @@
 package br.com.seguros.servico;
 
 import br.com.seguros.dtos.ApoliceDto;
+import br.com.seguros.dtos.RelatoriosTotaisDto;
 import br.com.seguros.entidades.Apolice;
 import br.com.seguros.excecoes.ExcecaoApoliceNaoEncontrada;
 import br.com.seguros.excecoes.ExcecaoSeguradoNaoEncontrado;
@@ -12,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -52,6 +54,18 @@ public class ApoliceServico {
     }
 
     public Apolice buscarApoliceOuLancarExceCao(Long id){
-        return apoliceRepositorio.findById(id).orElseThrow(()-> new ExcecaoApoliceNaoEncontrada("Apólice não encontrada !"));
+        return apoliceRepositorio.findById(id).orElseThrow(()->
+                new ExcecaoApoliceNaoEncontrada("Apólice não encontrada !"));
+    }
+
+    public RelatoriosTotaisDto obterResumoFinanceiroPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+
+        // 1. Validação de Segurança: Impede que o usuário digite a data fim menor que a inicial
+        if (dataInicio.isAfter(dataFim)) {
+            throw new IllegalArgumentException("A data de início não pode ser posterior à data final!");
+        }
+
+        // 2. Chama o banco de dados que faz a soma das apólices ATIVAS no período
+        return apoliceRepositorio.calcularResumoFinanceiroPorPeriodo(dataInicio, dataFim);
     }
 }
