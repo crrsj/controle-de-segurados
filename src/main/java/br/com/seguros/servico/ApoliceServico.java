@@ -1,10 +1,12 @@
 package br.com.seguros.servico;
 
 import br.com.seguros.dtos.ApoliceDto;
+import br.com.seguros.dtos.RelatoriosTotaisDto;
 import br.com.seguros.entidades.Apolice;
 import br.com.seguros.excecoes.ExcecaoApoliceNaoEncontrada;
 import br.com.seguros.excecoes.ExcecaoSeguradoNaoEncontrado;
 import br.com.seguros.repositorio.ApoliceRepositorio;
+import br.com.seguros.repositorio.RelatoriosTotaisProjecao;
 import br.com.seguros.repositorio.SeguradoRepositorio;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -52,6 +55,23 @@ public class ApoliceServico {
     }
 
     public Apolice buscarApoliceOuLancarExceCao(Long id){
-        return apoliceRepositorio.findById(id).orElseThrow(()-> new ExcecaoApoliceNaoEncontrada("Apólice não encontrada !"));
+        return apoliceRepositorio.findById(id).orElseThrow(()->
+                new ExcecaoApoliceNaoEncontrada("Apólice não encontrada !"));
+    }
+
+    public RelatoriosTotaisDto obterResumoFinanceiroPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+        if (dataInicio.isAfter(dataFim)) {
+            throw new IllegalArgumentException("A data de início não pode ser posterior à data final!");
+        }
+
+        // Busca a projeção do banco
+        RelatoriosTotaisProjecao projecao = apoliceRepositorio.calcularResumoFinanceiroPorPeriodo(dataInicio, dataFim);
+
+        // Converte e retorna o seu DTO original de forma segura
+        return new RelatoriosTotaisDto(
+                projecao.getTotalComissao(),
+                projecao.getTotalPremioLiquido(),
+                projecao.getTotalPremioBruto()
+        );
     }
 }

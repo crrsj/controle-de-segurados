@@ -28,55 +28,28 @@ public class Apolice {
     private LocalDate vigenciaFinal;
     @Enumerated(EnumType.STRING)
     private Cia cia;
-    private int comissao;
+    private BigDecimal porcentagemComissao;
     private int parcelas;
-    private BigDecimal premio;
-    private BigDecimal valorComissao;
+    private BigDecimal premioLiquido;
+    private BigDecimal premioBruto;
+    private BigDecimal totalComissao;
     private boolean ativa = true;
     @ManyToOne
     @JoinColumn(name = "segurado_id")
     @JsonIgnore
     private Segurado segurado;
 
-
-    public int getAno() {
-        return this.dataCadastro.getYear();
-    }
-
-    public int getMesNumero() {
-        return this.dataCadastro.getMonthValue(); // Retorna de 1 a 12
-    }
-
     /**
-     * Calcula o valor do prêmio proporcional a uma semana (considerando o prêmio total)
-     * Exemplo lógico simples: dividindo o prêmio total por 4 semanas.
+     * Calcula a comissão individual cheia deste seguro.
+     * Baseado estritamente no Prêmio Líquido.
      */
-    public BigDecimal getPremioPorSemana() {
-        if (this.premio == null) return BigDecimal.ZERO;
-        return this.premio.divide(new BigDecimal("4"), 2, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Calcula o valor do prêmio proporcional por mês (baseado nas parcelas da apólice)
-     */
-    public BigDecimal getPremioPorMes() {
-        if (this.premio == null || this.parcelas <= 0) return BigDecimal.ZERO;
-        return this.premio.divide(new BigDecimal(this.parcelas), 2, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Calcula a comissão semanal baseada no valor total da comissão
-     */
-    public BigDecimal getValorComissaoPorSemana() {
-        if (this.valorComissao == null) return BigDecimal.ZERO;
-        return this.valorComissao.divide(new BigDecimal("4"), 2, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Calcula a comissão mensal baseada nas parcelas
-     */
-    public BigDecimal getValorComissaoPorMes() {
-        if (this.valorComissao == null || this.parcelas <= 0) return BigDecimal.ZERO;
-        return this.valorComissao.divide(new BigDecimal(this.parcelas), 2, RoundingMode.HALF_UP);
+    public BigDecimal getValorComissao() {
+        if (this.premioLiquido == null || this.porcentagemComissao == null) {
+            return BigDecimal.ZERO;
+        }
+        // Conta: (Premio Liquido * Porcentagem) / 100
+        return this.premioLiquido
+                .multiply(this.porcentagemComissao)
+                .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
     }
 }
