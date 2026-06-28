@@ -6,6 +6,7 @@ import br.com.seguros.entidades.Apolice;
 import br.com.seguros.excecoes.ExcecaoApoliceNaoEncontrada;
 import br.com.seguros.excecoes.ExcecaoSeguradoNaoEncontrado;
 import br.com.seguros.repositorio.ApoliceRepositorio;
+import br.com.seguros.repositorio.RelatoriosTotaisProjecao;
 import br.com.seguros.repositorio.SeguradoRepositorio;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -59,13 +60,18 @@ public class ApoliceServico {
     }
 
     public RelatoriosTotaisDto obterResumoFinanceiroPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
-
-        // 1. Validação de Segurança: Impede que o usuário digite a data fim menor que a inicial
         if (dataInicio.isAfter(dataFim)) {
             throw new IllegalArgumentException("A data de início não pode ser posterior à data final!");
         }
 
-        // 2. Chama o banco de dados que faz a soma das apólices ATIVAS no período
-        return apoliceRepositorio.calcularResumoFinanceiroPorPeriodo(dataInicio, dataFim);
+        // Busca a projeção do banco
+        RelatoriosTotaisProjecao projecao = apoliceRepositorio.calcularResumoFinanceiroPorPeriodo(dataInicio, dataFim);
+
+        // Converte e retorna o seu DTO original de forma segura
+        return new RelatoriosTotaisDto(
+                projecao.getTotalComissao(),
+                projecao.getTotalPremioLiquido(),
+                projecao.getTotalPremioBruto()
+        );
     }
 }
