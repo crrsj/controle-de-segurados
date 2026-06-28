@@ -36,4 +36,17 @@ public class ApoliceServico {
         return apoliceRepositorio.findAll(pageable).map(apolice ->
                 modelMapper.map(apolice, ApoliceDto.class)).toList();
     }
+
+    public List<ApoliceDto>listarApolicesAtivas(){
+        List<Apolice> apolicesAtivas = apoliceRepositorio.findAllByAtivaTrue();
+        return apolicesAtivas.stream().map(apolice->
+                modelMapper.map(apolice, ApoliceDto.class)).toList();
+    }
+
+    public List<ApoliceDto> listarApolicesInativas() {
+        List<Apolice> apolicesInativas = apoliceRepositorio.findAllByAtivaFalse();
+        return apolicesInativas.stream()
+                .map(apolice -> modelMapper.map(apolice, ApoliceDto.class))
+                .toList();
+    }
 }
