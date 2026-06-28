@@ -2,6 +2,7 @@ package br.com.seguros.servico;
 
 import br.com.seguros.dtos.ApoliceDto;
 import br.com.seguros.entidades.Apolice;
+import br.com.seguros.excecoes.ExcecaoApoliceNaoEncontrada;
 import br.com.seguros.excecoes.ExcecaoSeguradoNaoEncontrado;
 import br.com.seguros.repositorio.ApoliceRepositorio;
 import br.com.seguros.repositorio.SeguradoRepositorio;
@@ -48,5 +49,9 @@ public class ApoliceServico {
         return apolicesInativas.stream()
                 .map(apolice -> modelMapper.map(apolice, ApoliceDto.class))
                 .toList();
+    }
+
+    public Apolice buscarApoliceOuLancarExceCao(Long id){
+        return apoliceRepositorio.findById(id).orElseThrow(()-> new ExcecaoApoliceNaoEncontrada("Apólice não encontrada !"));
     }
 }
